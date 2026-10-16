@@ -20,11 +20,19 @@
             box-sizing: border-box
         }
 
+        html {
+            height: 100%
+        }
+
         body {
             margin: 0;
             color: var(--ink);
             background: var(--bg);
-            font-family: "Segoe UI", "Microsoft YaHei", sans-serif
+            font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden
         }
 
         button,
@@ -91,9 +99,14 @@
         }
 
         main {
+            width: 100%;
             max-width: 1280px;
-            margin: auto;
-            padding: 38px 32px 50px
+            margin: 0 auto;
+            padding: 30px 32px 22px;
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column
         }
 
         .hero {
@@ -169,11 +182,20 @@
             box-shadow: 0 2px 5px #202b3910
         }
 
+        .topbar,
+        .hero,
+        .modes,
+        footer {
+            flex-shrink: 0
+        }
+
         .layout {
             display: grid;
             grid-template-columns: 190px minmax(0, 1fr);
             gap: 26px;
-            align-items: start
+            align-items: stretch;
+            flex: 1;
+            min-height: 0
         }
 
         .sidebar {
@@ -181,20 +203,55 @@
             border: 1px solid var(--line);
             border-radius: 16px;
             padding: 16px;
-            position: sticky;
-            top: 20px
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden
+        }
+
+        .content {
+            min-height: 0;
+            overflow-y: auto;
+            overscroll-behavior: contain
         }
 
         .side-label {
             font-size: 11px;
             letter-spacing: 1px;
             color: var(--muted);
-            margin: 2px 10px 14px
+            margin: 2px 10px 14px;
+            flex-shrink: 0
         }
 
         .tabs {
             display: grid;
-            gap: 4px
+            gap: 4px;
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            overscroll-behavior: contain
+        }
+
+        .tab[hidden] {
+            display: none
+        }
+
+        .verb-search {
+            box-sizing: border-box;
+            width: 100%;
+            min-width: 0;
+            flex: none;
+            margin: 0 0 10px;
+            padding: 9px 12px;
+            border-radius: 9px;
+            font-size: 12px
+        }
+
+        .verb-empty {
+            margin: 8px 10px 2px;
+            font-size: 12px;
+            color: var(--muted);
+            flex-shrink: 0
         }
 
         .tab {
@@ -566,8 +623,9 @@
         }
 
         footer {
+            width: 100%;
             max-width: 1280px;
-            margin: auto;
+            margin: 0 auto;
             padding: 20px 32px 28px;
             font-size: 11px;
             color: var(--muted);
@@ -625,11 +683,11 @@
 
             .layout {
                 grid-template-columns: 1fr;
+                grid-template-rows: auto minmax(0, 1fr);
                 gap: 18px
             }
 
             .sidebar {
-                position: static;
                 padding: 12px
             }
 
@@ -639,7 +697,9 @@
 
             .tabs {
                 display: flex;
+                flex: none;
                 overflow-x: auto;
+                overflow-y: hidden;
                 gap: 6px;
                 padding-bottom: 5px
             }
@@ -748,7 +808,7 @@
                 <p>浏览、回忆、再练习。建立属于自己的短语库。</p>
             </div>
             <div class="stats">
-                <div class="stat"><strong id="total">200</strong><span>常用短语</span></div>
+                <div class="stat"><strong id="total">300</strong><span>常用短语</span></div>
                 <div class="stat"><strong id="mastered">0</strong><span>已掌握</span></div>
             </div>
         </section>
@@ -758,9 +818,12 @@
         <div class="layout">
             <aside class="sidebar">
                 <div class="side-label">动词分类 / VERBS</div>
+                <input id="verb-search" class="verb-search" type="search" aria-label="搜索动词"
+                    placeholder="搜索动词…">
                 <nav class="tabs" aria-label="按动词筛选"></nav>
+                <p class="verb-empty" id="verb-empty" hidden>没有匹配的动词</p>
             </aside>
-            <div>
+            <div class="content">
                 <section id="browse">
                     <div class="toolbar"><input id="search" type="search" aria-label="搜索短语、释义或例句"
                             placeholder="搜索短语或中文释义…"><button class="btn" id="meanings"
@@ -1034,7 +1097,117 @@
                 ['take out', '取出；带出去', 'He took out his phone to check the time.'],
                 ['take back', '收回（话）；退回', 'I take back what I said.'],
                 ['take part in', '参加', 'We took part in a local race.'],
-                ['take care of', '照顾；处理', 'Can you take care of the plants?']]
+                ['take care of', '照顾；处理', 'Can you take care of the plants?']],
+            pick: [
+                ['pick up', '捡起；学会；接（人）', 'She picked up the pen from the floor.'],
+                ['pick out', '挑选出', 'It took me ages to pick out a dress.'],
+                ['pick on', '刁难；欺负', 'Stop picking on your little brother.'],
+                ['pick apart', '逐一批评；挑剔', 'The critics picked the film apart.'],
+                ['pick at', '一点点地吃；吹毛求疵', 'She was too nervous to eat and just picked at her food.'],
+                ['pick off', '摘下；逐个击中', 'He picked off the ripe apples one by one.'],
+                ['pick your way', '小心择路而行', 'We picked our way across the rocky path.'],
+                ['pick a fight', '挑衅；找茬吵架', 'Do not pick a fight over such a small matter.'],
+                ['pick your words', '斟酌用语；措辞谨慎', 'You should pick your words carefully in the interview.'],
+                ['pick up speed', '加速', 'The train picked up speed as it left the station.']],
+            cut: [
+                ['cut off', '切断；中断', 'The storm cut off the power supply.'],
+                ['cut down on', '减少；削减', 'You should cut down on sugar and fried food.'],
+                ['cut out', '删除；停止', 'Cut out the second paragraph of your essay.'],
+                ['cut in', '插话；插队', 'She kept cutting in while I was speaking.'],
+                ['cut back', '削减；缩减开支', 'We need to cut back on spending this month.'],
+                ['cut through', '穿过；抄近路', 'We cut through the park to save time.'],
+                ['cut up', '切碎', 'Cut up the vegetables before cooking.'],
+                ['cut it fine', '时间留得太紧；险些来不及', 'We cut it fine, but we still caught the train.'],
+                ['cut corners', '偷工减料；图省事走捷径', 'Do not cut corners when safety is involved.'],
+                ['cut a deal', '达成协议', 'The two companies cut a deal last week.']],
+            drop: [
+                ['drop off', '让……下车；放下', 'Can you drop me off at the corner?'],
+                ['drop out', '退出；退学', 'He dropped out of the race because of injury.'],
+                ['drop by', '顺道拜访', 'Feel free to drop by any time this week.'],
+                ['drop in on', '顺便看望（某人）', 'We dropped in on our neighbors yesterday.'],
+                ['drop back', '退后；落后', 'He dropped back to let the others pass.'],
+                ['drop away', '逐渐减少；消失', 'Support for the plan dropped away quickly.'],
+                ['drop someone a line', '给某人写短信；留言', 'Drop me a line when you arrive.'],
+                ['drop the subject', '不再谈这个话题', 'Please drop the subject; I don’t want to argue.'],
+                ['drop a hint', '暗示', 'She dropped a hint about her birthday present.'],
+                ['drop your guard', '放松警惕', 'The team dropped their guard after taking the lead.']],
+            fall: [
+                ['fall behind', '落后', 'Don’t fall behind on your studies.'],
+                ['fall apart', '破裂；崩溃', 'The old book fell apart in my hands.'],
+                ['fall out', '吵架；闹翻', 'The two friends fell out over money.'],
+                ['fall for', '爱上；上当受骗', 'He fell for the trick and lost his money.'],
+                ['fall back on', '依靠；转而依靠', 'She can always fall back on her teaching experience.'],
+                ['fall through', '落空；失败', 'Our travel plans fell through at the last minute.'],
+                ['fall over', '绊倒；摔倒', 'The child fell over while running in the yard.'],
+                ['fall into place', '变得清晰；各就各位', 'Once I read the guide, everything fell into place.'],
+                ['fall asleep', '入睡', 'I fell asleep during the movie.'],
+                ['fall ill', '生病', 'She fell ill just before the final exam.']],
+            stand: [
+                ['stand up', '站起来', 'Everyone stood up when the guest entered.'],
+                ['stand for', '代表；象征', 'What does this abbreviation stand for?'],
+                ['stand out', '突出；显眼', 'Her red coat made her stand out in the crowd.'],
+                ['stand by', '支持；待命', 'I will stand by you no matter what happens.'],
+                ['stand up for', '支持；维护', 'You should stand up for your rights.'],
+                ['stand up to', '勇敢面对；抵抗', 'She stood up to the bully and protected her friend.'],
+                ['stand aside', '站到一边；让开', 'Please stand aside and let the doctor through.'],
+                ['stand around', '闲站着；干等', 'We stood around waiting for the bus for half an hour.'],
+                ['stand a chance', '有机会；有希望', 'The team doesn’t stand a chance without its captain.'],
+                ['stand your ground', '坚持立场；不退让', 'He stood his ground during the heated debate.']],
+            throw: [
+                ['throw away', '扔掉', 'Don’t throw away those boxes; we may need them.'],
+                ['throw out', '丢弃；提出', 'They threw out the old furniture yesterday.'],
+                ['throw in', '额外赠送；顺便加入', 'The seller threw in a free phone case.'],
+                ['throw up', '举起（手等）', 'She threw up her hand to ask a question.'],
+                ['throw off', '摆脱；甩掉', 'A week of rest helped me throw off the cold.'],
+                ['throw yourself into', '全身心投入', 'She threw herself into her new job.'],
+                ['throw a party', '举办派对', 'They threw a party for their tenth anniversary.'],
+                ['throw light on', '阐明；使明白', 'The study throws light on how birds migrate.'],
+                ['throw in the towel', '认输；放弃', 'After three failures, he threw in the towel.'],
+                ['throw your weight around', '仗势欺人；摆架子', 'The new manager likes to throw his weight around.']],
+            catch: [
+                ['catch up with', '赶上（某人）', 'I walked fast to catch up with her.'],
+                ['catch on', '流行起来；明白', 'The new style caught on quickly among teenagers.'],
+                ['catch out', '发现……的差错；使措手不及', 'The tricky question caught him out.'],
+                ['catch up on', '补做；补了解', 'Let’s catch up on the news over coffee.'],
+                ['catch sight of', '看见；瞥见', 'I caught sight of a deer in the woods.'],
+                ['catch fire', '着火', 'Dry grass catches fire easily in summer.'],
+                ['catch a cold', '感冒', 'Wear a coat or you’ll catch a cold.'],
+                ['catch someone’s eye', '引起某人注意', 'The bright poster caught my eye at once.'],
+                ['catch your breath', '喘口气；缓一缓', 'We stopped to catch our breath halfway up the hill.'],
+                ['catch hold of', '抓住；握住', 'Catch hold of the rope and pull hard.']],
+            check: [
+                ['check in', '登记入住；报到', 'We checked in at the hotel before noon.'],
+                ['check out', '退房；查看', 'Check out this amazing view from the roof!'],
+                ['check up on', '检查；核实（某人情况）', 'The doctor checked up on me last week.'],
+                ['check off', '核对后勾掉', 'Check off each item as you pack it.'],
+                ['check over', '仔细检查', 'The mechanic checked over the engine carefully.'],
+                ['check through', '通读检查', 'I checked through my notes before the exam.'],
+                ['check back', '稍后再查看', 'Please check back tomorrow for updates.'],
+                ['check with', '与……核实', 'I’ll check with my boss before I answer you.'],
+                ['check the time', '看时间', 'He checked the time and hurried out of the door.'],
+                ['check your facts', '核实事实', 'Always check your facts before publishing.']],
+            fill: [
+                ['fill in', '填写（表格）；临时替代', 'Please fill in your name and address.'],
+                ['fill out', '填写（表格）', 'Fill out this form before the interview.'],
+                ['fill up', '加满；装满', 'The driver filled up the tank at the station.'],
+                ['fill in for', '临时替代（某人）', 'Can you fill in for me on Friday?'],
+                ['fill someone in on', '向某人介绍（情况）', 'She filled me in on the latest news.'],
+                ['fill up with', '充满', 'Her eyes filled up with tears of joy.'],
+                ['fill a need', '满足需求', 'The new store fills a need in the neighborhood.'],
+                ['fill the gap', '填补空白', 'This course fills the gap in my knowledge.'],
+                ['fill the role', '胜任……的角色', 'She fills the role of team leader well.'],
+                ['fill someone’s shoes', '接替某人的位置', 'It won’t be easy to fill her shoes.']],
+            hang: [
+                ['hang out', '闲逛；常去', 'We hang out at the cafe after class.'],
+                ['hang up', '挂断电话', 'She hung up before I could answer.'],
+                ['hang on', '稍等；坚持', 'Hang on, I’ll be right there.'],
+                ['hang around', '逗留；闲荡', 'They hung around the station all afternoon.'],
+                ['hang together', '连贯；团结', 'The story doesn’t hang together very well.'],
+                ['hang back', '踌躇；退缩', 'A few students hung back after class to ask questions.'],
+                ['hang on to', '紧紧抓住；保留', 'Hang on to your ticket until the end of the show.'],
+                ['hang in there', '坚持住；别放弃', 'Hang in there; the exam is almost over.'],
+                ['hang your head', '低头（表示羞愧）', 'He hung his head in shame after the mistake.'],
+                ['hang a picture', '挂画', 'We hung a picture above the sofa.']]
         };
 
         const entries = Object.entries(raw).flatMap(([verb, rows]) =>
@@ -1157,6 +1330,7 @@
         for (const v of ['all', ...Object.keys(raw)]) {
           const b = document.createElement('button');
           b.className = 'tab' + (v === 'all' ? ' active' : '');
+          b.dataset.verb = v;
           const label = document.createElement('span');
           label.textContent = v === 'all' ? '全部短语' : v;
           const count = document.createElement('small');
@@ -1170,9 +1344,27 @@
               t.setAttribute('aria-pressed', String(t === b));
             });
             render();
+            $('.content').scrollTop = 0;
           };
           $('.tabs').append(b);
         }
+        const verbSearch = $('#verb-search');
+        verbSearch.oninput = () => {
+          const q = verbSearch.value.trim().toLowerCase();
+          let hits = 0;
+          document.querySelectorAll('.tab').forEach(t => {
+            const isAll = t.dataset.verb === 'all';
+            const show = !q || isAll || t.dataset.verb.includes(q);
+            t.hidden = !show;
+            if (show && !isAll) hits++;
+          });
+          $('#verb-empty').hidden = !(q && !hits);
+        };
+        verbSearch.onkeydown = e => {
+          if (e.key !== 'Enter') return;
+          const first = [...document.querySelectorAll('.tab')].find(t => !t.hidden && t.dataset.verb !== 'all');
+          if (first) first.click();
+        };
         function pool() {
           switch ($('#scope').value) {
             case 'all': return entries;
