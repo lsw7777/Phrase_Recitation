@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Phrase Studio · 短语学习室</title>
+<style>
+:root{--ink:#202b39;--muted:#7a8492;--orange:#d97736;--orange-bg:#fdf0e6;--orange-border:#f5c6a1;--line:#e4e9f1;--bg:#f5f7fb}*{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--bg);font-family:"Segoe UI","Microsoft YaHei",sans-serif}button,input,select{font:inherit}button{cursor:pointer}button:disabled{cursor:default;opacity:.45}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #f5b88c;outline-offset:3px}[hidden]{display:none!important}.topbar{background:#fff;border-bottom:1px solid var(--line)}.top-inner{max-width:1280px;margin:auto;padding:22px 32px;display:flex;align-items:center;justify-content:space-between}.brand{font-size:18px;font-weight:750;letter-spacing:-.5px;display:flex;align-items:center;gap:12px}.logo{background:var(--orange);color:white;border-radius:12px;padding:8px 10px;font-family:Georgia,serif;font-size:23px}.top-note{font-size:12px;color:var(--muted)}main{max-width:1280px;margin:auto;padding:38px 32px 50px}.hero{display:flex;justify-content:space-between;align-items:center;gap:24px;margin-bottom:30px}.eyebrow{color:var(--orange);font-size:11px;font-weight:750;letter-spacing:2px}h1{font-size:32px;letter-spacing:-1px;margin:10px 0}p{line-height:1.7}.hero p{color:var(--muted);font-size:14px;margin:0}.stats{display:flex;gap:32px}.stat strong{display:block;font-size:28px;letter-spacing:-1px}.stat span{font-size:12px;color:var(--muted)}.modes{display:flex;gap:6px;padding:5px;background:#e9edf5;border-radius:12px;width:max-content;margin-bottom:24px}.mode{border:0;background:none;padding:11px 24px;border-radius:9px;color:var(--muted);font-weight:600;font-size:14px}.mode.active{background:white;color:var(--orange);box-shadow:0 2px 5px #202b3910}.layout{display:grid;grid-template-columns:190px minmax(0,1fr);gap:26px;align-items:start}.sidebar{background:white;border:1px solid var(--line);border-radius:16px;padding:16px;position:sticky;top:20px}.side-label{font-size:11px;letter-spacing:1px;color:var(--muted);margin:2px 10px 14px}.tabs{display:grid;gap:4px}.tab{border:0;border-radius:8px;background:none;color:#596474;display:flex;justify-content:space-between;align-items:center;text-align:left;padding:9px 12px;font-size:14px;font-weight:600}.tab small{font-size:10px;font-weight:400;opacity:.65}.tab:hover{background:#fdf6f1}.tab.active{background:var(--orange-bg);color:var(--orange)}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}input{min-width:150px;flex:1;border:1px solid var(--line);background:white;padding:12px 16px;border-radius:10px;font-size:13px;color:var(--ink)}.btn{border:1px solid var(--line);background:white;padding:11px 16px;border-radius:10px;color:#596474;font-size:13px}.btn[aria-pressed=true]{border-color:var(--orange-border);color:var(--orange);background:var(--orange-bg)}.primary{background:var(--orange);color:white;border-color:var(--orange)}.meta{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:12px;color:var(--muted);margin:20px 0 14px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.card{background:white;border:1px solid var(--line);border-radius:14px;padding:20px;transition:transform .2s,box-shadow .2s;position:relative}.card:hover{transform:translateY(-3px);box-shadow:0 8px 24px #d9773615}.card-top{display:flex;justify-content:space-between;align-items:center}.tag{font-size:10px;color:var(--orange);background:var(--orange-bg);padding:4px 8px;border-radius:5px;letter-spacing:.5px}.save{border:0;background:none;color:#a1aabd;font-size:22px;padding:0 3px}.save[aria-pressed=true]{color:#d39228}h2{font-size:23px;letter-spacing:-.6px;margin:17px 0 10px;font-weight:650}.meaning{font-size:13px;margin:0 0 15px;color:#596474}.example{margin:0;border-top:1px solid #f0f2f6;padding-top:13px;color:var(--muted);font-family:Georgia,serif;font-size:14px;line-height:1.65}.hidden-meaning .meaning{visibility:hidden}.mastery{font-size:10px;margin-top:13px;color:#8793a6}.mastery.known{color:#258574}.empty{text-align:center;padding:45px;color:var(--muted);grid-column:1/-1}.test-panel{background:white;border:1px solid var(--line);border-radius:18px;padding:28px}.test-panel h2{margin-top:0;font-size:22px}.description{color:var(--muted);font-size:13px}.test-options{display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin:24px 0}.test-options label{font-size:12px;color:var(--muted);display:grid;gap:8px;flex:1;min-width:150px}select{padding:11px;border:1px solid var(--line);border-radius:9px;background:white;color:var(--ink)}.session-top{display:flex;justify-content:space-between;gap:12px;align-items:center;font-size:12px;color:var(--muted)}progress{display:block;width:100%;height:7px;border:0;margin:16px 0 25px;border-radius:8px;overflow:hidden;accent-color:var(--orange)}progress::-webkit-progress-bar{background:#edf0f6}progress::-webkit-progress-value{background:var(--orange)}.flashcard{display:block;width:100%;min-height:300px;border:1px solid var(--orange-border);background:radial-gradient(ellipse at top right,var(--orange-bg),transparent 65%),#fffcfa;border-radius:18px;padding:35px;text-align:center;color:var(--ink)}.flashcard .flash-tag{display:block;color:var(--orange);font-size:11px;letter-spacing:2px}.flash-phrase{display:block;font-size:clamp(28px,4vw,44px);font-weight:650;letter-spacing:-1px;margin:22px 0}.flash-hint{display:block;font-size:13px;color:var(--muted)}.answer{display:block;margin-top:22px}.answer-meaning{display:block;font-size:20px}.answer-example{display:block;color:var(--muted);font-family:Georgia,serif;font-size:16px;margin-top:14px;line-height:1.6}.grading{display:flex;justify-content:center;gap:12px;margin-top:22px}.grading .btn{min-width:145px}.again{color:#b77722;background:#fffaef;border-color:#f1dfba}.known-btn{color:#23806b;background:#edf9f4;border-color:#c5e7da}.shortcut{text-align:center;color:var(--muted);font-size:11px;margin-top:15px}.result{text-align:center;padding:38px 10px}.result strong{display:block;color:var(--orange);font-size:60px;margin:18px}.result h3{font-size:24px}.result .btn{margin:8px}.storage-note{font-size:12px;color:#a07121;margin-top:15px}footer{max-width:1280px;margin:auto;padding:20px 32px 28px;font-size:11px;color:var(--muted);border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:15px}@media(min-width:1000px){.test-panel{padding:32px 42px}}@media(max-width:1100px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:720px){main{padding:25px 18px}.top-inner{padding:17px 18px}.top-note{display:none}.hero{align-items:start}.stats{gap:15px}.stat strong{font-size:22px}.hero h1{font-size:25px}.hero p{max-width:230px;font-size:12px}.layout{grid-template-columns:1fr;gap:18px}.sidebar{position:static;padding:12px}.side-label{margin-bottom:10px}.tabs{display:flex;overflow-x:auto;gap:6px;padding-bottom:5px}.tab{flex-shrink:0;gap:8px;background:#f6f8fc}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.card{padding:16px}h2{font-size:20px}.test-panel{padding:20px}.flashcard{padding:25px 15px}.meta{font-size:11px}footer{padding:20px 18px;flex-direction:column}}@media(max-width:420px){.grid{grid-template-columns:1fr}.stats .stat:first-child{display:none}.grading .btn{min-width:0;flex:1}.mode{padding:10px 20px}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+/* 三行标题：衬线小字、楷书标题、仿宋题注；使用本机字体，无需加载资源。 */
+.hero .eyebrow{
+  font-family:"Palatino Linotype","Book Antiqua",serif;
+  font-weight:400;
+  letter-spacing:3px;
+  color:#75442d;
+}
+.hero h1{
+  font-family:"KaiTi","STKaiti",serif;
+  font-weight:400;
+  letter-spacing:2px;
+  color:#412e25;
+  text-shadow:0 1px 0 #fff4e8;
+}
+.hero p{
+  font-family:"FangSong","STFangsong",serif;
+  letter-spacing:1px;
+  color:#705547;
+  border-left:2px solid #b96635;
+  padding-left:12px;
+}
+</style></head><body>
+<div class="topbar"><div class="top-inner"><div class="brand"><span class="logo">Ps.</span>Phrase Studio</div><span class="top-note">每天一点，让英语表达更自然</span></div></div>
+<main><section class="hero"><div><span class="eyebrow">YOUR DAILY ENGLISH PRACTICE</span><h1>把短语，变成你的表达。</h1><p>浏览、回忆、再练习。建立属于自己的短语库。</p></div><div class="stats"><div class="stat"><strong id="total">200</strong><span>常用短语</span></div><div class="stat"><strong id="mastered">0</strong><span>已掌握</span></div></div></section>
+<nav class="modes" aria-label="学习模式"><button class="mode active" id="browse-mode" aria-pressed="true">短语卡片</button><button class="mode" id="test-mode" aria-pressed="false">卡片测试 →</button></nav>
+<div class="layout"><aside class="sidebar"><div class="side-label">动词分类 / VERBS</div><nav class="tabs" aria-label="按动词筛选"></nav></aside><div>
+<section id="browse"><div class="toolbar"><input id="search" type="search" aria-label="搜索短语、释义或例句" placeholder="搜索短语或中文释义…"><button class="btn" id="meanings" aria-pressed="false">隐藏释义</button><button class="btn" id="favorites" aria-pressed="false">☆ 收藏</button></div><div class="meta"><span id="count" role="status" aria-live="polite"></span><button class="btn primary" id="test-current">测试当前短语 →</button></div><div class="grid" id="cards"></div></section>
+<section id="test" class="test-panel" hidden><div id="setup"><span class="eyebrow">RECALL BEFORE YOU REVEAL</span><h2>一张卡片，一次主动回忆。</h2><p class="description">先看英文短语，回忆中文意思。翻开答案后，诚实标记掌握情况。<br>这是自评练习，掌握记录会保存在当前浏览器。</p><div class="test-options"><label>练习范围<select id="scope"><option value="current">当前筛选的短语</option><option value="all">全部短语</option><option value="saved">收藏的短语</option><option value="review">需复习的短语</option><option value="new">未测试的短语</option></select></label><label>出卡顺序<select id="order"><option value="random">随机顺序</option><option value="normal">原始顺序</option></select></label><button id="start" class="btn primary">开始测试 →</button></div><p class="description" id="pool-count" role="status" aria-live="polite"></p></div>
+<div id="session" hidden><div class="session-top"><span id="session-count" role="status" aria-live="polite"></span><button id="exit" class="btn">结束本轮</button></div><progress id="progress" value="0" max="1" aria-label="本轮测试进度"></progress><button class="flashcard" id="flashcard" aria-label="显示答案"><span class="flash-tag" id="flash-tag"></span><span class="flash-phrase" id="flash-phrase" lang="en"></span><span class="flash-hint" id="hint">先回忆中文含义，再点击卡片查看答案</span><span class="answer" id="answer" hidden><span class="answer-meaning" id="answer-meaning"></span><span class="answer-example" id="answer-example" lang="en"></span></span></button><div class="grading"><button class="btn primary" id="reveal">显示答案</button><button class="btn again" id="again" hidden>↺ 需复习</button><button class="btn known-btn" id="known" hidden>✓ 已掌握</button></div><p class="shortcut">空格：显示答案 · 1：需复习 · 2：已掌握</p></div>
+<div id="result" class="result" hidden><span class="eyebrow">SESSION COMPLETE</span><h3 id="result-title">本轮练习完成</h3><strong id="result-score"></strong><p class="description" id="result-detail"></p><button class="btn primary" id="retry">再练需复习的短语</button><button class="btn" id="restart">选择新一轮练习</button></div>
+</section><p class="storage-note" id="storage-note" hidden>浏览器存储不可用，本次记录仅在当前页面有效。</p></div></div></main>
+<footer><span>PHRASE STUDIO / 英语短语学习室</span><span>包含短语动词与常用搭配 · 展示常见含义</span></footer>
+<script>
+const raw={
+run:[
+['run out of','用完；耗尽','We ran out of milk this morning.'],
+['run into','偶然遇见；遇到（困难）','I ran into an old friend at the station.'],
+['run across','偶然遇见；偶然发现','I ran across an interesting article yesterday.'],
+['run away','逃跑；离开','The dog ran away when it heard the noise.'],
+['run after','追赶','The little boy ran after the bus.'],
+['run over','碾过；超过（时间等）','The meeting ran over by twenty minutes.'],
+['run through','快速检查；排练','Let us run through the plan one more time.'],
+['run around','忙来忙去；到处跑','I have been running around all day doing errands.'],
+['run a business','经营企业','She runs a small business from home.'],
+['run the risk of','冒……的风险','You run the risk of missing the train if you leave late.']],
+hold:[
+['hold on','等一下；坚持住','Hold on a moment while I find my keys.'],
+['hold onto','紧握；保留','Hold onto the handrail as you go down the stairs.'],
+['hold up','耽搁；举起','Heavy traffic held us up for an hour.'],
+['hold back','阻止；抑制','She could not hold back her tears.'],
+['hold off','推迟；暂缓','We decided to hold off making a decision until Friday.'],
+['hold out','伸出；坚持','He held out his hand to greet me.'],
+['hold together','使团结；保持完整','Their shared goals hold the team together.'],
+['hold a meeting','召开会议','We will hold a meeting on Monday.'],
+['hold your breath','屏住呼吸','Hold your breath as you go underwater.'],
+['hold your tongue','忍住不说；保持沉默','I wanted to argue, but I held my tongue.']],
+work:[
+['work out','锻炼；想出；解决','We worked out a solution together.'],
+['work on','致力于；努力改善','I am working on my English pronunciation.'],
+['work at','努力做；在……工作','You need to work at building your confidence.'],
+['work for','为……工作','She works for a software company.'],
+['work with','与……共事；使用……工作','I enjoy working with this team.'],
+['work through','逐步处理；逐项完成','We worked through the problems one by one.'],
+['work up','逐渐激起；产生','The long walk helped us work up an appetite.'],
+['work toward','朝……努力','We are working toward a common goal.'],
+['work around','设法避开或解决（障碍）','We found a way to work around the problem.'],
+['work wonders','产生奇效；效果显著','A good night of sleep can work wonders.']],
+pull:[
+['pull up','停车；停下','A taxi pulled up outside the hotel.'],
+['pull over','靠边停车','Please pull over at the next safe spot.'],
+['pull out','驶出；退出','The car pulled out of the driveway.'],
+['pull in','（车辆）进站；驶入','The train pulled in on time.'],
+['pull off','成功完成（难事）','They pulled off an amazing victory.'],
+['pull through','康复；渡过难关','The doctors expect her to pull through.'],
+['pull together','齐心协力','We need to pull together to finish this project.'],
+['pull apart','拆开；扯开','He pulled apart the broken toy.'],
+['pull back','退后；撤退','The troops pulled back before dawn.'],
+['pull yourself together','振作起来；冷静下来','Take a deep breath and pull yourself together.']],
+push:[
+['push for','努力争取；敦促','The workers are pushing for better pay.'],
+['push ahead with','推进；继续开展','We will push ahead with the plan.'],
+['push through','使获通过；完成','They pushed through the new policy.'],
+['push back','推迟；反对抵制','They pushed back the meeting to Friday.'],
+['push off','离开；（船等）撑离岸边','We pushed off from the shore at sunrise.'],
+['push on','继续前进','Despite the rain, we pushed on.'],
+['push aside','推到一边；搁置','She pushed aside her doubts and tried again.'],
+['push around','欺负；摆布','Do not let anyone push you around.'],
+['push your luck','得寸进尺；冒险碰运气','You got one favor. Do not push your luck.'],
+['push yourself','鞭策自己；努力挑战自己','Push yourself to learn something new.']],
+get:[
+['get up','起床；站起来','I get up at seven every morning.'],
+['get on','上车（公交、火车等）','We got on the bus near the station.'],
+['get off','下车','Get off at the next stop.'],
+['get along with','与……相处','I get along with my neighbors.'],
+['get over','克服；从……恢复','It took her a week to get over the flu.'],
+['get through','完成；熬过','We got through all the work before lunch.'],
+['get back','回来；取回','What time did you get back?'],
+['get away','离开；逃脱','We want to get away for the weekend.'],
+['get rid of','摆脱；处理掉','I need to get rid of these old boxes.'],
+['get used to','习惯于','You will get used to the weather.']],
+look:[
+['look for','寻找','I am looking for my keys.'],
+['look after','照顾','Can you look after my cat?'],
+['look at','看；审视','Look at the picture carefully.'],
+['look up','查阅','Look up the word in a dictionary.'],
+['look into','调查','We will look into the problem.'],
+['look forward to','期待','I look forward to meeting you.'],
+['look out','当心','Look out! There is a car coming.'],
+['look back on','回顾','She looks back on her school days fondly.'],
+['look up to','敬佩','Many children look up to their teachers.'],
+['look down on','看不起','Never look down on other people.']],
+turn:[
+['turn on','打开（电器等）','Please turn on the light.'],
+['turn off','关闭','Turn off the TV before bed.'],
+['turn up','调高；出现','Could you turn up the volume?'],
+['turn down','调低；拒绝','She turned down the job offer.'],
+['turn around','转身；扭转局面','He turned around and smiled.'],
+['turn into','变成','The rain turned into snow.'],
+['turn out','结果是；原来是','The trip turned out to be wonderful.'],
+['turn to','向……求助','You can turn to me for help.'],
+['turn over','翻转','Turn over the card to see the answer.'],
+['turn in','提交；上交','Please turn in your homework tomorrow.']],
+break:[
+['break down','出故障；崩溃','Our car broke down on the way home.'],
+['break up','分手；解散','They broke up last year.'],
+['break out','（战争、火灾等）爆发','A fire broke out in the kitchen.'],
+['break in','闯入；插话','Someone tried to break in last night.'],
+['break into','闯入（某处）','Thieves broke into the house.'],
+['break through','突破','The sun broke through the clouds.'],
+['break off','中断；折断','They broke off the negotiations.'],
+['break away from','脱离；挣脱','He broke away from the group.'],
+['break the ice','打破僵局；活跃气氛','A funny story helped break the ice.'],
+['break a promise','违背承诺','You should never break a promise.']],
+set:[
+['set up','建立；设置','They set up a small business.'],
+['set off','出发；引发','We set off early in the morning.'],
+['set out','出发；着手','She set out to write her first novel.'],
+['set aside','留出；搁置','Set aside some time to read every day.'],
+['set back','使受挫；延缓','The bad weather set back our work.'],
+['set down','写下；放下','He set down his ideas in a notebook.'],
+['set in','（不良情况）开始并持续','Winter has set in.'],
+['set about','开始着手','They set about cleaning the house.'],
+['set an example','树立榜样','Good leaders set an example for others.'],
+['set a goal','设定目标','Set a goal you can work toward.']],
+keep:[
+['keep on','继续','Keep on trying until you succeed.'],
+['keep up with','跟上','It is hard to keep up with all the changes.'],
+['keep away from','远离','Keep away from the edge.'],
+['keep out of','不进入；避开','Please keep out of this room.'],
+['keep off','不靠近；不踩踏','Keep off the grass.'],
+['keep back','与……保持距离；隐瞒','The police told everyone to keep back.'],
+['keep in touch','保持联系','Let us keep in touch after graduation.'],
+['keep an eye on','留意；照看','Can you keep an eye on my bag?'],
+['keep your word','信守诺言','You can trust him to keep his word.'],
+['keep track of','跟踪了解；记录','Use a notebook to keep track of your spending.']],
+give:[
+['give up','放弃','Never give up on your dreams.'],
+['give in','让步；屈服','She finally gave in and agreed.'],
+['give out','分发；发完','They gave out free tickets.'],
+['give away','赠送；泄露','Don’t give away the ending.'],
+['give back','归还','Please give back my book.'],
+['give off','散发（气味、热等）','The flowers give off a sweet smell.'],
+['give rise to','引起；导致','The decision gave rise to a debate.'],
+['give way to','被……取代；让位于','Winter gave way to spring.'],
+['give someone a hand','帮某人一把','Could you give me a hand with this box?'],
+['give it a try','试一试','The recipe looks easy. Give it a try.']],
+call:[
+['call back','回电话','I’ll call you back after lunch.'],
+['call off','取消','They called off the match because of rain.'],
+['call on','拜访；请某人发言','The teacher called on me to answer.'],
+['call for','需要；呼吁','This job calls for patience.'],
+['call up','打电话给；使回忆起','I called up an old friend yesterday.'],
+['call in','请来（专家等）','We called in a doctor.'],
+['call out','大声喊；公开指出','She called out my name across the room.'],
+['call upon','请求；号召','They called upon everyone to help.'],
+['call it a day','结束当天的工作','We’ve done enough. Let’s call it a day.'],
+['call the shots','做主；掌控','Who calls the shots around here?']],
+put:[
+['put on','穿上；戴上','Put on your coat before you go out.'],
+['put off','推迟','Don’t put off your homework.'],
+['put away','收好；放回原处','Please put away your toys.'],
+['put down','放下；记下','Put down your bag and take a seat.'],
+['put out','扑灭','The firefighters put out the fire.'],
+['put up','搭建；张贴','We put up a tent by the lake.'],
+['put up with','忍受','I can’t put up with the noise.'],
+['put forward','提出（建议等）','She put forward a useful idea.'],
+['put together','组装；整理成','We put together a simple plan.'],
+['put aside','留出；暂时搁置','Put aside some money every month.']],
+bring:[
+['bring up','提起；抚养','Don’t bring up that subject again.'],
+['bring back','带回；唤起','This song brings back happy memories.'],
+['bring in','引入；赚得','They brought in a new manager.'],
+['bring out','使显现；推出','Teamwork brings out the best in her.'],
+['bring about','导致；带来','The reforms brought about major changes.'],
+['bring down','降低；使倒下','We need to bring down the cost.'],
+['bring along','随身带来','You can bring along a friend.'],
+['bring together','使聚在一起','Music brings people together.'],
+['bring forward','将时间提前','They brought the meeting forward to Monday.'],
+['bring to light','揭露；使为人所知','The report brought new facts to light.']],
+come:[
+['come in','进来','Come in and sit down.'],
+['come out','出版；出现','Her new book comes out next week.'],
+['come back','回来','Please come back soon.'],
+['come across','偶然遇见；发现','I came across an old photo.'],
+['come up with','想出；提出','Can you come up with a better idea?'],
+['come true','成为现实','Her dream finally came true.'],
+['come along','一起来；进展','Would you like to come along?'],
+['come over','来访','Come over for dinner tonight.'],
+['come to','总计；恢复意识','The bill came to fifty dollars.'],
+['come about','发生；产生','How did this change come about?']],
+go:[
+['go on','继续；发生','Please go on with your story.'],
+['go out','外出；熄灭','We went out for dinner.'],
+['go back','回去','It’s time to go back home.'],
+['go ahead','开始做；请便','Go ahead and ask your question.'],
+['go through','经历；仔细检查','She went through a difficult time.'],
+['go over','复习；检查','Let’s go over the answers together.'],
+['go off','（警报等）响起；变质','My alarm went off at six.'],
+['go with','与……相配','This shirt goes with your jeans.'],
+['go without','没有……也勉强应付','We had to go without hot water.'],
+['go for','选择；争取','I think I’ll go for the salad.']],
+carry:[
+['carry on','继续','Please carry on with your work.'],
+['carry out','执行；实施','They carried out the experiment carefully.'],
+['carry over','延续到下一阶段','Unused days can carry over to next year.'],
+['carry off','成功完成（困难的事）','She carried off the performance beautifully.'],
+['carry through','将……完成到底','We’ll carry the project through to the end.'],
+['carry around','随身携带','I carry around a small notebook.'],
+['carry away','搬走；带走','The workers carried away the broken chairs.'],
+['carry a tune','唱得合调','He can carry a tune quite well.'],
+['carry weight','有分量；有影响力','Her opinion carries weight with the team.'],
+['carry the day','获胜；取得成功','Their strongest argument carried the day.']],
+make:[
+['make up','编造；和解；组成','He made up an excuse for being late.'],
+['make out','辨认出；理解','I couldn’t make out the words on the sign.'],
+['make for','朝……走去；有助于','We made for the nearest exit.'],
+['make sure','确保','Make sure the door is locked.'],
+['make sense','有道理；讲得通','Your explanation makes sense.'],
+['make a difference','产生影响；起作用','Small changes can make a difference.'],
+['make the most of','充分利用','Make the most of your free time.'],
+['make up for','弥补','I’ll work harder to make up for lost time.'],
+['make room for','为……腾出空间','Can you make room for one more chair?'],
+['make ends meet','使收支相抵','They work hard to make ends meet.']],
+take:[
+['take off','脱下；起飞','The plane takes off at noon.'],
+['take on','承担；雇用','She took on more responsibility.'],
+['take up','开始从事；占用','I took up painting last year.'],
+['take over','接管','He will take over the business.'],
+['take after','长得像；性格像','She takes after her mother.'],
+['take in','理解；吸收','There was too much information to take in.'],
+['take out','取出；带出去','He took out his phone to check the time.'],
+['take back','收回（话）；退回','I take back what I said.'],
+['take part in','参加','We took part in a local race.'],
+['take care of','照顾；处理','Can you take care of the plants?']]
+};
+
+const entries=Object.entries(raw).flatMap(([verb,rows])=>rows.map(([phrase,meaning,example])=>({verb,phrase,meaning,example})));
+const $=s=>document.querySelector(s);
+let saved=new Set(),mastery={},verb='all',onlySaved=false,hideMeaning=false,mode='browse',queue=[],position=0,revealed=false,results=[];
+try{const a=JSON.parse(localStorage.getItem('verb-atlas-saved')||'[]');if(Array.isArray(a))saved=new Set(a.filter(x=>typeof x==='string'));const b=JSON.parse(localStorage.getItem('phrase-studio-mastery')||'{}');if(b&&typeof b==='object'&&!Array.isArray(b))for(const e of entries)if(['known','review'].includes(b[e.phrase]))mastery[e.phrase]=b[e.phrase];}catch{}
+function persist(){try{localStorage.setItem('verb-atlas-saved',JSON.stringify([...saved]));localStorage.setItem('phrase-studio-mastery',JSON.stringify(mastery));}catch{$('#storage-note').hidden=false;}}
+function filtered(){const q=$('#search').value.trim().toLowerCase();return entries.filter(e=>(verb==='all'||e.verb===verb)&&(!onlySaved||saved.has(e.phrase))&&[e.phrase,e.meaning,e.example].some(x=>x.toLowerCase().includes(q)));}
+function render(){const list=filtered();$('#total').textContent=entries.length;$('#mastered').textContent=entries.filter(e=>mastery[e.phrase]==='known').length;$('#count').textContent=(verb==='all'?'全部动词':verb)+' · '+list.length+' 个短语';$('#test-current').disabled=!list.length;const grid=$('#cards');grid.replaceChildren();grid.classList.toggle('hidden-meaning',hideMeaning);for(const e of list){const card=document.createElement('article');card.className='card';const top=document.createElement('div');top.className='card-top';const tag=document.createElement('span');tag.className='tag';tag.textContent=e.verb.toUpperCase();const save=document.createElement('button');save.className='save';save.textContent=saved.has(e.phrase)?'★':'☆';save.setAttribute('aria-pressed',String(saved.has(e.phrase)));save.setAttribute('aria-label','收藏 '+e.phrase);save.onclick=()=>{saved.has(e.phrase)?saved.delete(e.phrase):saved.add(e.phrase);persist();render();};top.append(tag,save);const title=document.createElement('h2');title.textContent=e.phrase;title.lang='en';const meaning=document.createElement('p');meaning.className='meaning';meaning.textContent=e.meaning;meaning.setAttribute('aria-hidden',String(hideMeaning));const example=document.createElement('p');example.className='example';example.lang='en';example.textContent=e.example;const state=document.createElement('div');state.className='mastery'+(mastery[e.phrase]==='known'?' known':'');state.textContent=mastery[e.phrase]==='known'?'✓ 已掌握':mastery[e.phrase]==='review'?'↺ 需复习':'○ 未测试';card.append(top,title,meaning,example,state);grid.append(card);}if(!list.length){const empty=document.createElement('p');empty.className='empty';empty.textContent='没有匹配的短语，试试调整搜索或收藏筛选。';grid.append(empty);}updatePool();}
+for(const v of ['all',...Object.keys(raw)]){const b=document.createElement('button');b.className='tab'+(v==='all'?' active':'');const label=document.createElement('span');label.textContent=v==='all'?'全部短语':v;const count=document.createElement('small');count.textContent=v==='all'?entries.length:raw[v].length;b.append(label,count);b.setAttribute('aria-pressed',String(v==='all'));b.onclick=()=>{verb=v;document.querySelectorAll('.tab').forEach(t=>{t.classList.toggle('active',t===b);t.setAttribute('aria-pressed',String(t===b));});render();};$('.tabs').append(b);}
+function pool(){switch($('#scope').value){case 'all':return entries;case 'saved':return entries.filter(e=>saved.has(e.phrase));case 'review':return entries.filter(e=>mastery[e.phrase]==='review');case 'new':return entries.filter(e=>!mastery[e.phrase]);default:return filtered();}}
+function updatePool(){const n=pool().length;$('#pool-count').textContent=n?n+' 个短语可供练习。每轮逐张测试，可随时结束。':'该范围暂无短语，请选择其他范围。';$('#start').disabled=!n;}
+function switchMode(next){mode=next;$('#browse').hidden=next!=='browse';$('#test').hidden=next!=='test';for(const name of ['browse','test']){$('#'+name+'-mode').classList.toggle('active',next===name);$('#'+name+'-mode').setAttribute('aria-pressed',String(next===name));}updatePool();}
+function showSetup(){$('#setup').hidden=false;$('#session').hidden=true;$('#result').hidden=true;updatePool();}
+function begin(list){if(!list.length)return;queue=[...list];if($('#order').value==='random')for(let i=queue.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[queue[i],queue[j]]=[queue[j],queue[i]];}position=0;results=[];$('#setup').hidden=true;$('#result').hidden=true;$('#session').hidden=false;showCard();}
+function showCard(){revealed=false;const e=queue[position];$('#session-count').textContent='第 '+(position+1)+' / '+queue.length+' 张 · 已完成 '+position+' 张';$('#progress').max=queue.length;$('#progress').value=position;$('#flash-tag').textContent=e.verb.toUpperCase()+' / RECALL';$('#flash-phrase').textContent=e.phrase;$('#answer-meaning').textContent=e.meaning;$('#answer-example').textContent=e.example;$('#answer').hidden=true;$('#hint').hidden=false;$('#reveal').hidden=false;$('#again').hidden=true;$('#known').hidden=true;$('#flashcard').setAttribute('aria-label',e.phrase+'，点击显示答案');$('#flashcard').focus();}
+function reveal(){if($('#session').hidden||revealed)return;revealed=true;$('#answer').hidden=false;$('#hint').hidden=true;$('#reveal').hidden=true;$('#again').hidden=false;$('#known').hidden=false;$('#flashcard').setAttribute('aria-label',queue[position].phrase+'，'+queue[position].meaning);$('#again').focus();}
+function grade(state){if(!revealed||$('#session').hidden)return;const e=queue[position];mastery[e.phrase]=state;results.push({entry:e,state});persist();position++;render();if(position>=queue.length)finish();else showCard();}
+function finish(){$('#session').hidden=true;$('#result').hidden=false;const known=results.filter(r=>r.state==='known').length;$('#result-title').textContent=position===queue.length?'本轮练习完成':'本轮练习已结束';$('#result-score').textContent=known+' / '+results.length;$('#result-detail').textContent='已掌握 '+known+' 个 · 需复习 '+(results.length-known)+' 个 · 未测试 '+(queue.length-results.length)+' 个。已完成的记录已更新。';$('#retry').disabled=!results.some(r=>r.state==='review');$('#restart').focus();}
+$('#browse-mode').onclick=()=>switchMode('browse');$('#test-mode').onclick=()=>switchMode('test');$('#test-current').onclick=()=>{$('#scope').value='current';showSetup();switchMode('test');};$('#search').oninput=render;
+$('#meanings').onclick=function(){hideMeaning=!hideMeaning;this.textContent=hideMeaning?'显示释义':'隐藏释义';this.setAttribute('aria-pressed',String(hideMeaning));render();};$('#favorites').onclick=function(){onlySaved=!onlySaved;this.setAttribute('aria-pressed',String(onlySaved));this.textContent=onlySaved?'★ 只看收藏':'☆ 收藏';render();};$('#scope').onchange=updatePool;$('#start').onclick=()=>begin(pool());$('#flashcard').onclick=reveal;$('#reveal').onclick=reveal;$('#again').onclick=()=>grade('review');$('#known').onclick=()=>grade('known');$('#exit').onclick=finish;$('#restart').onclick=showSetup;$('#retry').onclick=()=>begin(results.filter(r=>r.state==='review').map(r=>r.entry));
+document.addEventListener('keydown',e=>{if(mode!=='test'||$('#session').hidden||e.repeat||e.ctrlKey||e.altKey||e.metaKey||['INPUT','SELECT','TEXTAREA'].includes(e.target.tagName))return;if(e.code==='Space'){e.preventDefault();reveal();}if(e.key==='1'){e.preventDefault();grade('review');}if(e.key==='2'){e.preventDefault();grade('known');}});
+render();
+</script></body></html>
