@@ -1306,7 +1306,9 @@
           saved.delete(queue[position].phrase);
           mastery[queue[position].phrase] = 'known';
           persist();
-          showCard();
+          position++;
+          if (position >= queue.length) finish();
+          else showCard();
         };
         $('#prev').onclick = prevCard;
         $('#reveal').onclick = reveal;
