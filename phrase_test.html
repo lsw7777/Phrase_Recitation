@@ -498,6 +498,26 @@
             border-color: var(--orange-border)
         }
 
+        #toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--ink);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 100;
+        }
+        #toast.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
         .flashcard .flash-tag {
             display: block;
             color: var(--orange);
@@ -820,7 +840,7 @@
                             id="progress" value="0" max="1" aria-label="本轮测试进度"></progress><button class="flashcard"
                             id="flashcard" aria-label="显示答案"><span class="flash-tag" id="flash-tag"></span><span
                                 class="flash-phrase" id="flash-phrase" lang="en"></span><span class="flash-hint"
-                                id="hint">先回忆中文含义，再点击卡片查看答案</span><span class="answer" id="answer" hidden><span
+                                id="hint">点击卡片查看答案</span><span class="answer" id="answer" hidden><span
                                     class="answer-meaning" id="answer-meaning"></span><span class="answer-example"
                                     id="answer-example" lang="en"></span></span><span class="unsave" id="unsave"
                                 hidden>移出收藏</span></button>
@@ -828,7 +848,7 @@
                                 class="btn primary" id="reveal">显示答案</button><button class="btn again" id="again"
                                 hidden>↺ 需复习</button><button class="btn known-btn" id="known" hidden>✓ 已掌握</button>
                         </div>
-                        <p class="shortcut">空格：显示答案 · 1：需复习 · 2：已掌握</p>
+                        <p class="shortcut" id="shortcut">← 上一张 ；→ 显示答案</p>
                     </div>
                     <div id="result" class="result" hidden><span class="eyebrow">SESSION COMPLETE</span>
                         <h3 id="result-title">本轮练习完成</h3><strong id="result-score"></strong>
@@ -1026,7 +1046,7 @@
                 ['go ahead', '开始做；请便', 'Go ahead and ask your question.'],
                 ['go through', '经历；仔细检查', 'She went through a difficult time.'],
                 ['go over', '复习；检查', 'Let’s go over the answers together.'],
-                ['go off', '（警报等）响起；变质', 'My alarm went off at six.'],
+                ['go off', '（警报等）响起；变质；爆炸；熄灭；发火；离开', 'My alarm went off at six.'],
                 ['go with', '与……相配', 'This shirt goes with your jeans.'],
                 ['go without', '没有……也勉强应付', 'We had to go without hot water.'],
                 ['go for', '选择；争取', 'I think I’ll go for the salad.']],
@@ -1380,7 +1400,8 @@
         function showCard() {
           revealed = false;
           const e = queue[position];
-          $('#session-count').textContent = '第 ' + (position + 1) + ' / ' + queue.length + ' 张 · 已完成 ' + position + ' 张';
+          const reviewCount = results.filter(r => r.state === 'review').length;
+          $('#session-count').textContent = '第 ' + (position + 1) + ' / ' + queue.length + ' 张 · 已完成 ' + position + ' 张 · 需复习 ' + reviewCount + ' 张';
           $('#progress').max = queue.length;
           $('#progress').value = position;
           $('#flash-tag').textContent = e.verb.toUpperCase() + ' / RECALL';
@@ -1396,6 +1417,7 @@
           $('#flashcard').focus();
           $('#prev').disabled = position <= 0;
           $('#unsave').hidden = !saved.has(e.phrase);
+          $('#shortcut').textContent = '← 上一张 ；→ 显示答案';
         }
         function prevCard() {
           if ($('#session').hidden || position <= 0) return;
@@ -1413,6 +1435,7 @@
           $('#known').hidden = false;
           $('#flashcard').setAttribute('aria-label', queue[position].phrase + '，' + queue[position].meaning);
           $('#again').focus();
+          $('#shortcut').textContent = '← 上一张 ；Space 需复习 ；→ 已掌握';
         }
         function grade(state) {
           if (!revealed || $('#session').hidden) return;
@@ -1463,10 +1486,19 @@
           saved.delete(queue[position].phrase);
           mastery[queue[position].phrase] = 'known';
           persist();
+          showToast('收藏夹还剩 ' + saved.size + ' 张卡片');
           position++;
           if (position >= queue.length) finish();
           else showCard();
         };
+
+        function showToast(msg) {
+          const t = $('#toast');
+          t.textContent = msg;
+          t.classList.add('show');
+          clearTimeout(t._timer);
+          t._timer = setTimeout(() => t.classList.remove('show'), 2000);
+        }
         $('#prev').onclick = prevCard;
         $('#reveal').onclick = reveal;
         $('#again').onclick = () => grade('review');
@@ -1476,13 +1508,18 @@
         $('#retry').onclick = () => begin(results.filter(r => r.state === 'review').map(r => r.entry));
         document.addEventListener('keydown', e => {
           if (mode !== 'test' || $('#session').hidden || e.repeat || e.ctrlKey || e.altKey || e.metaKey || ['INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName)) return;
-          if (e.code === 'Space') { e.preventDefault(); reveal(); }
-          if (e.key === 'ArrowLeft') { e.preventDefault(); prevCard(); }
-          if (e.key === '1') { e.preventDefault(); grade('review'); }
-          if (e.key === '2') { e.preventDefault(); grade('known'); }
+          if (revealed) {
+            if (e.key === 'ArrowRight') { e.preventDefault(); grade('known'); }
+            else if (e.key === 'ArrowLeft') { e.preventDefault(); prevCard(); }
+            else if (e.code === 'Space') { e.preventDefault(); grade('review'); }
+          } else {
+            if (e.key === 'ArrowRight') { e.preventDefault(); reveal(); }
+            else if (e.key === 'ArrowLeft') { e.preventDefault(); prevCard(); }
+          }
         });
         loadData();
     </script>
+    <div id="toast" role="status" aria-live="polite"></div>
 </body>
 
-</html>
+</html
