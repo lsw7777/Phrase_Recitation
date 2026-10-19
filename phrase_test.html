@@ -503,9 +503,6 @@
 
         #toast {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
             background: var(--ink);
             color: #fff;
             padding: 8px 16px;
@@ -846,7 +843,7 @@
                                 id="hint">点击卡片查看答案</span><span class="answer" id="answer" hidden><span
                                     class="answer-meaning" id="answer-meaning"></span><span class="answer-example"
                                     id="answer-example" lang="en"></span></span><span class="unsave" id="unsave"
-                                hidden>移出收藏</span></button>
+                                hidden>取消收藏</span></button>
                         <div class="grading"><button class="btn" id="prev" disabled>← 上一张</button><button
                                 class="btn primary" id="reveal">显示答案</button><button class="btn again" id="again"
                                 hidden>↺ 需复习</button><button class="btn known-btn" id="known" hidden>✓ 已掌握</button>
@@ -1596,7 +1593,7 @@
           saved.delete(queue[position].phrase);
           mastery[queue[position].phrase] = 'known';
           persist();
-          showToast('收藏夹还剩 ' + saved.size + ' 张卡片');
+          showToast('收藏夹剩余 ' + saved.size + ' 个词组');
           position++;
           if (position >= queue.length) finish();
           else showCard();
@@ -1604,7 +1601,12 @@
 
         function showToast(msg) {
           const t = $('#toast');
+          const card = $('#flashcard');
+          const rect = card.getBoundingClientRect();
           t.textContent = msg;
+          t.style.left = (rect.left + rect.width / 2) + 'px';
+          t.style.top = (rect.top + rect.height / 2) + 'px';
+          t.style.transform = 'translate(-50%, -50%)';
           t.classList.add('show');
           clearTimeout(t._timer);
           t._timer = setTimeout(() => t.classList.remove('show'), 2000);
