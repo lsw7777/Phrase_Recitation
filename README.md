@@ -55,3 +55,26 @@
 **使用 Node.js (http-server):**
 ```bash
 npx http-server .
+
+---
+
+## 📝 最近更新
+
+### v3 - 让 toast 框显示在词组卡片中央
+- 将“移出收藏”按钮文案改为“取消收藏”
+- Toast 提示文案调整为“收藏夹剩余 X 个词组”
+- Toast 显示位置从页面正中央改为**单词卡片正中央**，更贴合操作上下文
+
+### v2 - 各种状态的持久化
+扩展 IndexedDB 持久化范围，刷新页面后以下状态均可保留：
+- 左侧动词分类筛选状态（verb）
+- “只看收藏”开关状态（onlySaved）
+- “隐藏释义”开关状态（hideMeaning）
+- 浏览/测试模式（mode）
+- 练习范围下拉框（scope）
+- 出卡顺序下拉框（order）
+- 卡片测试进度（queue、position、revealed、results）
+
+### v1 - 调整“开始测试”按钮高度
+- 将 `.test-options .btn.primary` 垂直内边距调整为 `13px 16px`
+- 使“开始测试”按钮高度与左侧“出卡顺序”下拉控件保持一致

@@ -832,7 +832,10 @@
                                     <option value="random">随机顺序</option>
                                     <option value="normal">原始顺序</option>
                                 </select></label><button id="start" class="btn primary">开始测试 →</button></div>
-                        <p class="description" id="pool-count" role="status" aria-live="polite"></p>
+                        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                            <p class="description" id="pool-count" role="status" aria-live="polite"></p>
+                            <button id="clear-review" class="btn">清空需复习队列</button>
+                        </div>
                     </div>
                     <div id="session" hidden>
                         <div class="session-top"><span id="session-count" role="status"
@@ -1049,7 +1052,7 @@
                 ['go off', '（警报等）响起；变质；爆炸；熄灭；发火；离开', 'My alarm went off at six.'],
                 ['go with', '与……相配', 'This shirt goes with your jeans.'],
                 ['go without', '没有……也勉强应付', 'We had to go without hot water.'],
-                ['go for', '选择；争取', 'I think I’ll go for the salad.']],
+                ['go for', '选择；争取；倾心；主张', 'I think I’ll go for the salad.']],
             carry: [
                 ['carry on', '继续', 'Please carry on with your work.'],
                 ['carry out', '执行；实施', 'They carried out the experiment carefully.'],
@@ -1062,7 +1065,7 @@
                 ['carry weight', '有分量；有影响力', 'Her opinion carries weight with the team.'],
                 ['carry the day', '获胜；取得成功', 'Their strongest argument carried the day.']],
             make: [
-                ['make up', '编造；和解；组成', 'He made up an excuse for being late.'],
+                ['make up', '编造；弥补；和解；组成；化妆；下定决心', 'He made up an excuse for being late.'],
                 ['make out', '辨认出；理解', 'I couldn’t make out the words on the sign.'],
                 ['make for', '朝……走去；有助于', 'We made for the nearest exit.'],
                 ['make sure', '确保', 'Make sure the door is locked.'],
@@ -1074,7 +1077,7 @@
                 ['make ends meet', '使收支相抵', 'They work hard to make ends meet.']],
             take: [
                 ['take off', '脱下；起飞', 'The plane takes off at noon.'],
-                ['take on', '承担；雇用', 'She took on more responsibility.'],
+                ['take on', '承担；呈现；雇用；表达；争斗', 'She took on more responsibility.'],
                 ['take up', '开始从事；占用', 'I took up painting last year.'],
                 ['take over', '接管', 'He will take over the business.'],
                 ['take after', '长得像；性格像', 'She takes after her mother.'],
@@ -1586,6 +1589,20 @@
         };
         $('#scope').onchange = () => { updatePool(); persist(); };
         $('#order').onchange = () => { updatePool(); persist(); };
+        $('#clear-review').onclick = () => {
+          let cleared = 0;
+          for (const phrase of Object.keys(mastery)) {
+            if (mastery[phrase] === 'review') {
+              delete mastery[phrase];
+              cleared++;
+            }
+          }
+          if (cleared > 0) {
+            persist();
+            render();
+            updatePool();
+          }
+        };
         $('#start').onclick = () => begin(pool());
         $('#flashcard').onclick = reveal;
         $('#unsave').onclick = (e) => {
@@ -1609,7 +1626,7 @@
           t.style.transform = 'translate(-50%, -50%)';
           t.classList.add('show');
           clearTimeout(t._timer);
-          t._timer = setTimeout(() => t.classList.remove('show'), 2000);
+          t._timer = setTimeout(() => t.classList.remove('show'), 1000);
         }
         $('#prev').onclick = prevCard;
         $('#reveal').onclick = reveal;
