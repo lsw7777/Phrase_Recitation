@@ -1245,13 +1245,105 @@
               for (const e of entries)
                 if (['known', 'review'].includes(b[e.phrase]))
                   mastery[e.phrase] = b[e.phrase];
+
+            const v = await idbGet('verb-atlas-verb');
+            if (typeof v === 'string') verb = v;
+
+            const os = await idbGet('verb-atlas-onlySaved');
+            if (typeof os === 'boolean') onlySaved = os;
+
+            const hm = await idbGet('verb-atlas-hideMeaning');
+            if (typeof hm === 'boolean') hideMeaning = hm;
+
+            const m = await idbGet('verb-atlas-mode');
+            if (m === 'browse' || m === 'test') mode = m;
+
+            const scopeEl = $('#scope');
+            const s = await idbGet('verb-atlas-scope');
+            if (s && ['current','all','saved','review','new'].includes(s)) scopeEl.value = s;
+
+            const orderEl = $('#order');
+            const o = await idbGet('verb-atlas-order');
+            if (o && ['random','normal'].includes(o)) orderEl.value = o;
+
+            const q = await idbGet('verb-atlas-queue');
+            if (Array.isArray(q)) queue = q;
+            const p = await idbGet('verb-atlas-position');
+            if (typeof p === 'number') position = p;
+            const rv = await idbGet('verb-atlas-revealed');
+            if (typeof rv === 'boolean') revealed = rv;
+            const res = await idbGet('verb-atlas-results');
+            if (Array.isArray(res)) results = res;
           } catch { }
           render();
+
+          // 恢复模式与按钮状态
+          if (mode === 'test') {
+            $('#browse').hidden = true;
+            $('#test').hidden = false;
+            $('#browse-mode').classList.remove('active');
+            $('#test-mode').classList.add('active');
+            $('#browse-mode').setAttribute('aria-pressed', 'false');
+            $('#test-mode').setAttribute('aria-pressed', 'true');
+            if (queue.length && position < queue.length) {
+              $('#setup').hidden = true;
+              $('#session').hidden = false;
+              $('#result').hidden = true;
+              if (revealed) {
+                $('#answer').hidden = false;
+                $('#hint').hidden = true;
+                $('#reveal').hidden = true;
+                $('#again').hidden = false;
+                $('#known').hidden = false;
+                $('#shortcut').textContent = '← 上一张 ；Space 需复习 ；→ 已掌握';
+              } else {
+                $('#answer').hidden = true;
+                $('#hint').hidden = false;
+                $('#reveal').hidden = false;
+                $('#again').hidden = true;
+                $('#known').hidden = true;
+                $('#shortcut').textContent = '← 上一张 ；→ 显示答案';
+              }
+              showCard();
+            }
+          } else {
+            $('#browse').hidden = false;
+            $('#test').hidden = true;
+            $('#browse-mode').classList.add('active');
+            $('#test-mode').classList.remove('active');
+            $('#browse-mode').setAttribute('aria-pressed', 'true');
+            $('#test-mode').setAttribute('aria-pressed', 'false');
+          }
+
+          // 恢复动词标签状态
+          document.querySelectorAll('.tab').forEach(t => {
+            const active = t.dataset.verb === verb;
+            t.classList.toggle('active', active);
+            t.setAttribute('aria-pressed', String(active));
+          });
+
+          // 恢复收藏/释义开关状态
+          $('#favorites').setAttribute('aria-pressed', String(onlySaved));
+          $('#favorites').textContent = onlySaved ? '★ 只看收藏' : '☆ 收藏';
+          $('#meanings').setAttribute('aria-pressed', String(hideMeaning));
+          $('#meanings').textContent = hideMeaning ? '显示释义' : '隐藏释义';
         }
         async function persist() {
           try {
             await idbPut('verb-atlas-saved', [...saved]);
             await idbPut('phrase-studio-mastery', mastery);
+            await idbPut('verb-atlas-verb', verb);
+            await idbPut('verb-atlas-onlySaved', onlySaved);
+            await idbPut('verb-atlas-hideMeaning', hideMeaning);
+            await idbPut('verb-atlas-mode', mode);
+            await idbPut('verb-atlas-scope', $('#scope').value);
+            await idbPut('verb-atlas-order', $('#order').value);
+            if (mode === 'test') {
+              await idbPut('verb-atlas-queue', queue);
+              await idbPut('verb-atlas-position', position);
+              await idbPut('verb-atlas-revealed', revealed);
+              await idbPut('verb-atlas-results', results);
+            }
           } catch { $('#storage-note').hidden = false; }
         }
         function filtered() {
@@ -1331,6 +1423,7 @@
               t.classList.toggle('active', t === b);
               t.setAttribute('aria-pressed', String(t === b));
             });
+            persist();
             render();
             $('.content').scrollTop = 0;
           };
@@ -1371,6 +1464,7 @@
         }
         function switchMode(next) {
           mode = next;
+          persist();
           $('#browse').hidden = next !== 'browse';
           $('#test').hidden = next !== 'test';
           for (const name of ['browse', 'test']) {
@@ -1395,6 +1489,7 @@
             }
           position = 0;
           results = [];
+          persist();
           $('#setup').hidden = true;
           $('#result').hidden = true;
           $('#session').hidden = false;
@@ -1421,11 +1516,13 @@
           $('#prev').disabled = position <= 0;
           $('#unsave').hidden = !saved.has(e.phrase);
           $('#shortcut').textContent = '← 上一张 ；→ 显示答案';
+          persist();
         }
         function prevCard() {
           if ($('#session').hidden || position <= 0) return;
           position--;
           results = results.filter((_, i) => i < position);
+          persist();
           showCard();
         }
         function reveal() {
@@ -1439,6 +1536,7 @@
           $('#flashcard').setAttribute('aria-label', queue[position].phrase + '，' + queue[position].meaning);
           $('#again').focus();
           $('#shortcut').textContent = '← 上一张 ；Space 需复习 ；→ 已掌握';
+          persist();
         }
         function grade(state) {
           if (!revealed || $('#session').hidden) return;
@@ -1460,6 +1558,12 @@
           $('#result-detail').textContent = '已掌握 ' + known + ' 个 · 需复习 ' + (results.length - known) + ' 个 · 未测试 ' + (queue.length - results.length) + ' 个。已完成的记录已更新。';
           $('#retry').disabled = !results.some(r => r.state === 'review');
           $('#restart').focus();
+          queue = [];
+          position = 0;
+          results = [];
+          revealed = false;
+          mode = 'browse';
+          persist();
         }
         $('#browse-mode').onclick = () => switchMode('browse');
         $('#test-mode').onclick = () => switchMode('test');
@@ -1473,15 +1577,18 @@
           hideMeaning = !hideMeaning;
           this.textContent = hideMeaning ? '显示释义' : '隐藏释义';
           this.setAttribute('aria-pressed', String(hideMeaning));
+          persist();
           render();
         };
         $('#favorites').onclick = function () {
           onlySaved = !onlySaved;
           this.setAttribute('aria-pressed', String(onlySaved));
           this.textContent = onlySaved ? '★ 只看收藏' : '☆ 收藏';
+          persist();
           render();
         };
-        $('#scope').onchange = updatePool;
+        $('#scope').onchange = () => { updatePool(); persist(); };
+        $('#order').onchange = () => { updatePool(); persist(); };
         $('#start').onclick = () => begin(pool());
         $('#flashcard').onclick = reveal;
         $('#unsave').onclick = (e) => {
