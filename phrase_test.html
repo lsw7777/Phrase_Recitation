@@ -518,6 +518,75 @@
             pointer-events: auto;
         }
 
+        #confirm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            backdrop-filter: blur(2px);
+        }
+        #confirm-modal.show {
+            display: flex;
+        }
+        #confirm-modal .modal-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 32px 28px;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+        }
+        #confirm-modal .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--ink);
+            margin: 0 0 12px;
+        }
+        #confirm-modal .modal-msg {
+            font-size: 14px;
+            color: var(--muted);
+            margin: 0 0 24px;
+            line-height: 1.6;
+        }
+        #confirm-modal .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+        #confirm-modal .btn-confirm {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 8px;
+            background: var(--orange);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        #confirm-modal .btn-confirm:hover {
+            background: #c46a2a;
+        }
+        #confirm-modal .btn-cancel {
+            padding: 10px 24px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #fff;
+            color: var(--ink);
+            font-size: 14px;
+            cursor: pointer;
+        }
+        #confirm-modal .btn-cancel:hover {
+            background: var(--bg);
+        }
+
+
         .flashcard .flash-tag {
             display: block;
             color: var(--orange);
@@ -834,11 +903,11 @@
                                 </select></label><button id="start" class="btn primary">开始测试 →</button></div>
                         <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
                             <p class="description" id="pool-count" role="status" aria-live="polite"></p>
-                            <button id="clear-review" class="btn">清空需复习队列</button>
+                            <button id="clear-review" class="btn primary">清空需复习队列</button>
                         </div>
                     </div>
                     <div id="session" hidden>
-                        <div class="session-top"><span id="session-count" role="status"
+                        <div class="session-top"><button id="back-to-setup" class="btn">返回</button><span id="session-count" role="status"
                                 aria-live="polite"></span><button id="exit" class="btn">结束本轮</button></div><progress
                             id="progress" value="0" max="1" aria-label="本轮测试进度"></progress><button class="flashcard"
                             id="flashcard" aria-label="显示答案"><span class="flash-tag" id="flash-tag"></span><span
@@ -1461,7 +1530,44 @@
             ? n + ' 个短语可供练习。每轮逐张测试，可随时结束。'
             : '该范围暂无短语，请选择其他范围。';
           $('#start').disabled = !n;
+          // 只有“需复习的短语”范围才显示清空需复习队列按钮
+          $('#clear-review').hidden = $('#scope').value !== 'review';
         }
+        function hasUnfinishedTest() {
+          return queue.length > 0 && position < queue.length;
+        }
+
+        function confirmResumeOrNew() {
+          if (!hasUnfinishedTest()) return Promise.resolve('new');
+          return new Promise((resolve) => {
+            const modal = $('#confirm-modal');
+            const title = $('#confirm-title');
+            const msg = $('#confirm-msg');
+            const okBtn = $('#confirm-ok');
+            const cancelBtn = $('#confirm-cancel');
+
+            title.textContent = '检测到未完成的练习';
+            msg.textContent = '第 ' + (position + 1) + ' / ' + queue.length + ' 张未完成。\n点击“确定”开始新练习，点击“取消”继续旧练习。';
+
+            modal.classList.add('show');
+
+            const cleanup = () => {
+              modal.classList.remove('show');
+              okBtn.onclick = null;
+              cancelBtn.onclick = null;
+            };
+
+            okBtn.onclick = () => {
+              cleanup();
+              resolve('new');
+            };
+            cancelBtn.onclick = () => {
+              cleanup();
+              resolve('resume');
+            };
+          });
+        }
+
         function switchMode(next) {
           mode = next;
           persist();
@@ -1472,6 +1578,14 @@
             $('#' + name + '-mode').setAttribute('aria-pressed', String(next === name));
           }
           updatePool();
+
+          // 切换到测试模式且有未完成的练习，直接恢复测试界面
+          if (next === 'test' && hasUnfinishedTest()) {
+            $('#setup').hidden = true;
+            $('#session').hidden = false;
+            $('#result').hidden = true;
+            showCard();
+          }
         }
         function showSetup() {
           $('#setup').hidden = false;
@@ -1567,10 +1681,24 @@
         }
         $('#browse-mode').onclick = () => switchMode('browse');
         $('#test-mode').onclick = () => switchMode('test');
-        $('#test-current').onclick = () => {
+        $('#test-current').onclick = async () => {
+          const action = await confirmResumeOrNew();
+          if (action === 'resume') {
+            $('#setup').hidden = true;
+            $('#session').hidden = false;
+            $('#result').hidden = true;
+            showCard();
+            return;
+          }
+          // 开始新练习：先清空旧测试状态，直接开始
+          queue = [];
+          position = 0;
+          results = [];
+          revealed = false;
+          persist();
           $('#scope').value = 'current';
-          showSetup();
           switchMode('test');
+          begin(pool());
         };
         $('#search').oninput = render;
         $('#meanings').onclick = function () {
@@ -1603,7 +1731,18 @@
             updatePool();
           }
         };
-        $('#start').onclick = () => begin(pool());
+        $('#back-to-setup').onclick = () => showSetup();
+        $('#start').onclick = async () => {
+          const action = await confirmResumeOrNew();
+          if (action === 'resume') {
+            $('#setup').hidden = true;
+            $('#session').hidden = false;
+            $('#result').hidden = true;
+            showCard();
+            return;
+          }
+          begin(pool());
+        };
         $('#flashcard').onclick = reveal;
         $('#unsave').onclick = (e) => {
           e.stopPropagation();
@@ -1649,6 +1788,17 @@
         loadData();
     </script>
     <div id="toast" role="status" aria-live="polite"></div>
+
+    <div id="confirm-modal">
+        <div class="modal-card">
+            <div class="modal-title" id="confirm-title">此页面显示</div>
+            <div class="modal-msg" id="confirm-msg"></div>
+            <div class="modal-actions">
+                <button id="confirm-ok" class="btn-confirm">确定</button>
+                <button id="confirm-cancel" class="btn-cancel">取消</button>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html
